@@ -1,29 +1,35 @@
-//
-// This is only a SKELETON file for the 'Simple Cipher' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
-const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
-const modedAlphabet = [];
-for (let i = 0; i < alphabet.length; i++) {
-  const element = alphabet[i - 2];
-  element = element === undefined ? alphabet[alphabet.length - 2] : element;
-  modedAlphabet.push(element);
-}
-console.log(modedAlphabet);
 export class Cipher {
-  constructor() {
-    throw new Error('Remove this statement and implement this function');
+  constructor(key = generateRandomKey()) {
+    if (!/^[a-z]+$/.test(key)) {
+      throw new Error('Invalid key');
+    }
+    this.key = key;
   }
-
-  encode() {
-    throw new Error('Remove this statement and implement this function');
+  encode(plaintext) {
+    let ciphertext = '';
+    for (let i = 0; i < plaintext.length; i++) {
+      let shift = this.key.charCodeAt(i % this.key.length) - 97;
+      ciphertext += String.fromCharCode(
+        ((plaintext.charCodeAt(i) - 97 + shift) % 26) + 97
+      );
+    }
+    return ciphertext;
   }
-
-  decode() {
-    throw new Error('Remove this statement and implement this function');
+  decode(ciphertext) {
+    let plaintext = '';
+    for (let i = 0; i < ciphertext.length; i++) {
+      let shift = this.key.charCodeAt(i % this.key.length) - 97;
+      plaintext += String.fromCharCode(
+        ((ciphertext.charCodeAt(i) - 97 - shift + 26) % 26) + 97
+      );
+    }
+    return plaintext;
   }
-
-  get key() {
-    throw new Error('Remove this statement and implement this function');
+}
+function generateRandomKey(length = 100) {
+  let key = '';
+  for (let i = 0; i < length; i++) {
+    key += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
   }
+  return key;
 }
